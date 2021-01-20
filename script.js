@@ -45,6 +45,8 @@ function clearAll(e) {
         //console.log(taskList.firstChild.innerText);
         taskList.removeChild(taskList.firstChild);
     }
+    //localStorage.clear(); //removes everything in local storage
+    localStorage.removeItem('taskListStorage'); //deletes specific key
 }
 
 function search(e){
@@ -62,3 +64,13 @@ function search(e){
 }
 
 //Functions for local storage data
+function storeTaskInStorage(task) {
+    let taskListStorage;
+    if (localStorage.getItem('taskListStorage') === null) {
+        taskListStorage = []; //will create one when it doesn't exist
+    } else {
+        taskListStorage = JSON.parse(localStorage.getItem('taskListStorage')); //get the saved data from storage and parse
+    }
+    taskListStorage.push(task); //push current input into the list of task
+    localStorage.setItem('taskListStorage', JSON.stringify(taskListStorage)); //saves to the local storage
+}
