@@ -10,6 +10,8 @@ form.addEventListener('submit', addTask);
 taskList.addEventListener('click', removeTask);
 clearBtn.addEventListener('click', clearAll);
 filter.addEventListener('keyup', search);
+//Event Listeners for local storage
+document.addEventListener('DOMContentLoaded', loadTaskList);
 
 //Functions
 function addTask(e) {
@@ -25,6 +27,9 @@ function addTask(e) {
         deleteTask.innerText = 'x';
         li.appendChild(deleteTask); //adding cross after the tasks
         taskList.appendChild(li); //adding tasks
+
+        storeTaskInStorage(taskInput.value); //to save tasks in local storage
+
         taskInput.value = '';
     }
 }
@@ -73,4 +78,23 @@ function storeTaskInStorage(task) {
     }
     taskListStorage.push(task); //push current input into the list of task
     localStorage.setItem('taskListStorage', JSON.stringify(taskListStorage)); //saves to the local storage
+}
+
+function loadTaskList() {
+    let taskListStorage; //for keeping tasks in the storage 
+    if (localStorage.getItem('taskListStorage') === null) {
+        taskListStorage = []; //will create one when it doesn't exist
+    } else {
+        taskListStorage = JSON.parse(localStorage.getItem('taskListStorage')); //get the saved data from storage and parse
+    }
+    taskListStorage.forEach(taskItem => {
+        //from addTask()
+        let li = document.createElement('li');
+        li.appendChild(document.createTextNode(taskItem + " "));
+        let deleteTask = document.createElement('a');
+        deleteTask.setAttribute('href', '#');
+        deleteTask.innerText = 'x';
+        li.appendChild(deleteTask); //adding cross after the tasks
+        taskList.appendChild(li); //adding tasks
+    });
 }
