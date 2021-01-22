@@ -40,6 +40,7 @@ function removeTask(e) {
         if (confirm("Sure?")) {
             elm = e.target.parentElement;
             elm.remove();
+            removeFromStorage(elm);
         }
     }
 }
@@ -97,4 +98,22 @@ function loadTaskList() {
         li.appendChild(deleteTask); //adding cross after the tasks
         taskList.appendChild(li); //adding tasks
     });
+}
+
+function removeFromStorage(taskItem) {
+    let taskListStorage;
+    if (localStorage.getItem('taskListStorage') === null) {
+        taskListStorage = []; //will create one when it doesn't exist
+    } else {
+        taskListStorage = JSON.parse(localStorage.getItem('taskListStorage')); //get the saved data from storage and parse
+    }
+    let item = taskItem;
+    item.removeChild(item.lastChild); //this removes <a> x </a> before removing the list item in the storage
+
+    taskListStorage.forEach((task, index) => {
+        if (item.innerText.trim() === task) {
+            taskListStorage.splice(index); //removes the array element without putting gap in array
+        }
+    });
+    localStorage.setItem('taskListStorage', JSON.stringify(taskListStorage));
 }
